@@ -11,6 +11,7 @@ find_package(robot_state_publisher REQUIRED)
 find_package(xacro REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(ros2_control REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -20,6 +21,7 @@ urdf
 meshes
 launch
 worlds
+config
 DESTINATION share/${PROJECT_NAME}/
 )
 

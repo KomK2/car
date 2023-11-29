@@ -970,4 +970,201 @@
     <axis
       xyz="-0.00252374300930457 0 -0.99999681535554" />
   </joint>
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    # Velocity Controllers for 2 back wheels
+
+      
+    <joint name="front_left_wheel_joint">
+      <command_interface name="velocity">
+          <param name="min">-1000.0</param>
+          <param name="max">1000.0</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="front_right_wheel_joint">
+    <command_interface name="velocity">
+        <param name="min">-1000.0</param>
+        <param name="max">1000.0</param>
+    </command_interface>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+    <joint name="back_left_wheel_joint">
+        <command_interface name="velocity">
+            <param name="min">-1000.0</param>
+            <param name="max">1000.0</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="back_right_wheel_link_joint">
+      <command_interface name="velocity">
+          <param name="min">-1000.0</param>
+          <param name="max">1000.0</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+  </joint>
+
+  <!-- Velocity controllers for ur10 -->
+  <joint name="01j">
+    <command_interface name="velocity">
+        <param name="min">-1000.0</param>
+        <param name="max">1000.0</param>
+    </command_interface>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+</joint>
+
+<joint name="12j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="23j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="34j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="45j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="56j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="67j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+    
+   
+   # Position Controller for 2 front wheels
+    <joint name="front_right_link_joint">
+        <command_interface name="position">
+            <param name="min">-3.14</param>
+            <param name="max">3.14</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="front_left_link_joint">
+      <command_interface name="position">
+          <param name="min">-3.14</param>
+          <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+  </joint>
+
+  <!-- postion control for UR10 arms -->
+  <joint name="01j">
+    <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+    </command_interface>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+</joint>
+<joint name="12j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="23j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="34j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="45j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="56j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="67j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+   
+    </ros2_control>
+
+    <gazebo>
+      <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+          <parameters>$(find car)/config/control.yaml</parameters>
+      </plugin>
+  </gazebo>
+
+
 </robot>
