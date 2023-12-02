@@ -33,6 +33,8 @@ install(
 install(
   PROGRAMS
   launch/robot_description_publisher.py
+  src/teleop.py
+  src/open_loop_controller.py
   DESTINATION lib/${PROJECT_NAME}
   )
 
