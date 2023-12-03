@@ -2,32 +2,32 @@
 <!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot
-  name="car" xmlns:xacro="http://ros.org/wiki/xacro">
-
-
-<link name="dummy_link"></link>
-
-<joint name="dummy_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0 0" />
-    <parent link="dummy_link"/>
-    <child link="car_base"/>
-</joint>
-
+     <robot
+     name="car" xmlns:xacro="http://ros.org/wiki/xacro">
+   
+   
+   <link name="dummy_link"></link>
+   
+   <joint name="dummy_joint" type="fixed">
+       <origin rpy="0 0 0" xyz="0 0 0" />
+       <parent link="dummy_link"/>
+       <child link="car_base"/>
+   </joint>
+   
   <link
     name="car_base">
     <inertial>
       <origin
-        xyz="8.17360748943693E-06 0.0225033135182252 0.309234562686189"
+        xyz="8.17360748943708E-06 0.0225033135182252 0.309234562686189"
         rpy="0 0 0" />
       <mass
         value="467.35674418477" />
       <inertia
         ixx="64.8069935901443"
-        ixy="0.00212233959160385"
-        ixz="0.000377899491888436"
+        ixy="0.00212233959160378"
+        ixz="0.000377899491888311"
         iyy="42.2474032259228"
-        iyz="-1.35082963675343"
+        iyz="-1.35082963675344"
         izz="71.07249676203" />
     </inertial>
     <visual>
@@ -545,7 +545,7 @@
   </link>
   <joint
     name="lidar_joint"
-    type="fixed">
+    type="continuous">
     <origin
       xyz="0 0.1524 0.655447"
       rpy="0 0 0" />
@@ -554,22 +554,22 @@
     <child
       link="lidar_link" />
     <axis
-      xyz="0 0 0" />
+      xyz="0 0 1" />
   </joint>
   <link
     name="ur10">
     <inertial>
       <origin
-        xyz="7.22391839389283E-06 -0.000475137384490065 0.000654978643972126"
+        xyz="7.22391839388936E-06 -0.000475137384490038 0.000654978643972126"
         rpy="0 0 0" />
       <mass
         value="1.91435201606526" />
       <inertia
         ixx="0.00312084570629235"
-        ixy="1.03835097415574E-07"
-        ixz="2.20016415043755E-07"
+        ixy="1.03835097415563E-07"
+        ixz="2.20016415043754E-07"
         iyy="0.00309492725703448"
-        iyz="5.55031448922638E-07"
+        iyz="5.55031448922626E-07"
         izz="0.00574920281992534" />
     </inertial>
     <visual>
@@ -613,14 +613,14 @@
     name="01">
     <inertial>
       <origin
-        xyz="3.70762208490583E-05 0.0114409852434528 0.0116125856420283"
+        xyz="3.70762208490617E-05 0.0114409852434533 0.0116125856420283"
         rpy="0 0 0" />
       <mass
-        value="8.30725875791485" />
+        value="8.30725875791486" />
       <inertia
         ixx="0.029020927491474"
-        ixy="7.55948089001624E-06"
-        ixz="-8.23045819536526E-06"
+        ixy="7.55948089001623E-06"
+        ixz="-8.23045819536529E-06"
         iyy="0.027224956518295"
         iyz="0.00281819311295836"
         izz="0.0270973700422314" />
@@ -672,8 +672,8 @@
         value="23.5085888532833" />
       <inertia
         ixx="0.256767671623099"
-        ixy="3.62399517884548E-06"
-        ixz="-9.72858775406835E-07"
+        ixy="3.6239951788455E-06"
+        ixz="-9.72858775406846E-07"
         iyy="0.0505710283974333"
         iyz="0.00203684454830707"
         izz="0.255664797838807" />
@@ -719,7 +719,7 @@
     name="23">
     <inertial>
       <origin
-        xyz="0.244390991313134 -0.0139095256822837 -0.00101283060327784"
+        xyz="0.244390991313135 -0.0139095256822837 -0.00101283060327786"
         rpy="0 0 0" />
       <mass
         value="8.43948455874415" />
@@ -728,7 +728,7 @@
         ixy="-1.75583144369193E-06"
         ixz="-0.00028822454084213"
         iyy="0.131613662619847"
-        iyz="3.49342881189503E-07"
+        iyz="3.49342881189501E-07"
         izz="0.131781826183782" />
     </inertial>
     <visual>
@@ -778,11 +778,11 @@
         value="0.728996428250046" />
       <inertia
         ixx="0.000910114210779735"
-        ixy="-4.95497562223857E-07"
+        ixy="-4.95497562223844E-07"
         ixz="-0.00012008521723334"
-        iyy="0.000986687923606721"
-        iyz="-1.62299300727914E-07"
-        izz="0.000877255272961633" />
+        iyy="0.000986687923606722"
+        iyz="-1.62299300727913E-07"
+        izz="0.000877255272961634" />
     </inertial>
     <visual>
       <origin
@@ -825,14 +825,14 @@
     name="45">
     <inertial>
       <origin
-        xyz="-6.86078064258272E-06 -0.00758686562123934 0.0107376301790447"
+        xyz="-6.86078064257925E-06 -0.00758686562123945 0.0107376301790445"
         rpy="0 0 0" />
       <mass
         value="0.728996237064777" />
       <inertia
         ixx="0.000986687619429261"
-        ixy="-1.03152618194114E-09"
-        ixz="-4.17354729205834E-07"
+        ixy="-1.0315261819144E-09"
+        ixz="-4.1735472920583E-07"
         iyy="0.000910112478523473"
         iyz="-0.000120085251276709"
         izz="0.000877253255884629" />
@@ -883,12 +883,12 @@
       <mass
         value="0.728997478631908" />
       <inertia
-        ixx="0.00098668725075459"
-        ixy="4.95491590353946E-07"
-        ixz="-1.62291043906277E-07"
+        ixx="0.000986687250754589"
+        ixy="4.95491590354025E-07"
+        ixz="-1.62291043906281E-07"
         iyy="0.000910112496687827"
         iyz="0.000120084923500319"
-        izz="0.000877253430656249" />
+        izz="0.000877253430656248" />
     </inertial>
     <visual>
       <origin
@@ -931,7 +931,7 @@
     name="67">
     <inertial>
       <origin
-        xyz="-5.11211491377381E-05 -0.000470150585815121 -0.00309378276926547"
+        xyz="-5.11211491377381E-05 -0.000470150585815121 -0.00309378276926542"
         rpy="0 0 0" />
       <mass
         value="0.430679886408465" />
@@ -980,7 +980,60 @@
     <axis
       xyz="-0.00252374300930457 0 -0.99999681535554" />
   </joint>
-
+  <link
+    name="gripper">
+    <inertial>
+      <origin
+        xyz="-0.00710247160346223 0.0303390950483817 0.000488474590246035"
+        rpy="0 0 0" />
+      <mass
+        value="1.34963431952749" />
+      <inertia
+        ixx="0.00651208089817064"
+        ixy="0.000182430404454022"
+        ixz="-0.000121865713788611"
+        iyy="0.00861283977900374"
+        iyz="-1.31090652690096E-05"
+        izz="0.0049440363866004" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://car/meshes/gripper.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://car/meshes/gripper.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="7-gripper_joint"
+    type="fixed">
+    <origin
+      xyz="-0.000514480216416438 0.000109109397764318 0.0968676227049757"
+      rpy="-1.5707963267949 0 3.14159265358979" />
+    <parent
+      link="67" />
+    <child
+      link="gripper" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  
   <ros2_control name="GazeboSystem" type="system">
     <hardware>
         <plugin>gazebo_ros2_control/GazeboSystem</plugin>
@@ -1242,5 +1295,5 @@
   </gazebo>
 
 
-
+  
 </robot>
