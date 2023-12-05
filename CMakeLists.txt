@@ -35,6 +35,9 @@ install(
   launch/robot_description_publisher.py
   src/teleop.py
   src/open_loop_controller.py
+  src/arm_control.py
+  src/test_cord.py
+  src/circle.py
   DESTINATION lib/${PROJECT_NAME}
   )
 
