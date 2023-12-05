@@ -34,12 +34,17 @@ class OpenLoopController(Node):
     def jacobian(self,theta_1,theta_2, theta_3, theta_4, theta_5, theta_6 ):
 
         x0= self.transformationMatrix(0 , rad(0), 0, rad(0))
-        x1= self.transformationMatrix(0 ,  rad( -90), 128, theta_1)
-        x2= self.transformationMatrix(612.7,rad( 180), 0,rad(-90)+ theta_2 )
-        x3 = self.transformationMatrix(571.6, rad(-180), 0,theta_3)
-        x4 = self.transformationMatrix(0,rad(90),  163.9,rad(90)+theta_4)
-        x5 = self.transformationMatrix(0,rad( -90),115.7,theta_5)
-        x6 = self.transformationMatrix(0, rad(0),192.2,theta_6)
+
+
+
+
+
+        x1= self.transformationMatrix( 0 , rad( -90), 128, theta_1)
+        x2= self.transformationMatrix(-612.7, rad(180), 0, rad(90)+ theta_2)
+        x3 = self.transformationMatrix(-571.6, rad(180), 0,theta_3)
+        x4 = self.transformationMatrix(0, rad(90), 163.9, rad(-90)+theta_4)
+        x5 = self.transformationMatrix(0,        rad(-90), 115.7,    theta_5)
+        x6 = self.transformationMatrix(0,         rad(0), 192.2,      theta_6)
 
         x = x1*x2*x3*x4*x5*x6
 
@@ -83,11 +88,11 @@ class OpenLoopController(Node):
 
     def arm_angle_callback(self):
         q = np.zeros((6,1))
-        d_theta = (2*np.pi)/200
+        d_theta = (2*np.pi)/20
         r = 100
         Ti = 0
         dt = 0.01
-        time = 200
+        time = 20
         j = self.jacobian(0,0,0,0,0,0)
         j_float = np.matrix(j).astype(np.float64)
         j_inv = np.linalg.pinv(j_float)
@@ -113,15 +118,14 @@ class OpenLoopController(Node):
             j_float = np.matrix(j).astype(np.float64)
             j_inv = np.linalg.pinv(j_float)
 
-            # getting end effector position by substitute all the obtained angles in the final transformation matrix to obtain the
-            to0= self.transformationMatrix(0 , rad(0), 0, rad(0))
 
+            to0= self.transformationMatrix(0 , rad(0), 0, rad(0))
             t1= self.transformationMatrix(0 ,  rad( -90), 128, q1)
-            t2= self.transformationMatrix(612.7,rad( 180), 0,rad(-90)+ q2 )
-            t3 = self.transformationMatrix(571.6, rad(-180), 0,q3)
-            t4 = self.transformationMatrix(0,rad(90),  163.9,rad(90)+q4)
-            t5 = self.transformationMatrix(0,rad( -90),115.7,q5)
-            t6 = self.transformationMatrix(0, rad(0),192.2,q6)
+            t2= self.transformationMatrix(-612.7, rad(180), 0, rad(90)+ q2 )
+            t3 = self.transformationMatrix(-571.6, rad(180), 0, q3)
+            t4 = self.transformationMatrix(0,rad(90), 163.9, rad(-90)+q4)
+            t5 = self.transformationMatrix(0,rad(-90),115.7, q5)
+            t6 = self.transformationMatrix(0, rad(0), 192.2, q5)
 
             t = to0*t1*t2*t3*t4*t5*t6
 
