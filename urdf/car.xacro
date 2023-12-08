@@ -1021,7 +1021,7 @@
   </link>
   <joint
     name="7-gripper_joint"
-    type="fixed">
+    type="continuous">
     <origin
       xyz="-0.000514480216416438 0.000109109397764318 0.0968676227049757"
       rpy="-1.5707963267949 0 3.14159265358979" />
@@ -1141,6 +1141,15 @@
   <state_interface name="position"/>
   <state_interface name="velocity"/>
 </joint>
+
+<joint name="7-gripper_joint">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
     
    
    # Position Controller for 2 front wheels
@@ -1219,7 +1228,14 @@
   <state_interface name="position"/>
   <state_interface name="velocity"/>
 </joint>
-
+<joint name="7-gripper_joint">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
    
     </ros2_control>
     <gazebo reference="lidar_link">
@@ -1285,6 +1301,34 @@
           <frame>car_base</frame>
           <!-- Any arbitray name for the world frame -->
           <world_frame>fixed_world</world_frame>
+        </plugin>
+      </gazebo>
+
+      <gazebo>
+        <plugin name='vacuum_gripper' filename='libgazebo_ros_vacuum_gripper.so'>
+      
+          <!-- This part can be commented out if not required -->
+          <ros>
+      
+            <!-- Add a namespace -->
+      
+            <namespace>/</namespace>
+      
+            <!-- Remapping service and topic names -->
+            <remapping>switch:=custom_switch</remapping>
+            <remapping>grasping:=custom_grasping</remapping>
+          </ros>
+      
+          <!-- Link associated with gripper -->
+          <link_name>gripper</link_name>
+      
+          <!-- Max distance to attract entities -->
+          <max_distance>10.0</max_distance>
+      
+          <!-- List of entities to be not attracted by the gripper -->
+          <fixed>ground_plane</fixed>
+          <fixed>wall</fixed>
+      
         </plugin>
       </gazebo>
   

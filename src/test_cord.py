@@ -293,7 +293,7 @@ class OpenLoopController(Node):
         
         iters = 0
         
-        print("Finding symbolic jacobian")
+        print("Calculating jacobian")
         
         # We only do this once since it's computationally heavy
         jacobian_symbolic = self.jacobian_expr(DH_params)
@@ -315,7 +315,7 @@ class OpenLoopController(Node):
             
 
             arm_angles = Float64MultiArray() 
-            arm_angles.data = [0.0,0.0,joints[0][0],joints[1][0],joints[2][0],joints[3][0],joints[4][0],0.0,0.0]
+            arm_angles.data = [0.0,0.0,joints[0][0],joints[1][0],joints[2][0],0.0,joints[3][0],joints[4][0],0.0,0.0]
                 # self.get_logger().info('publishing postions: "%s"' % self.i)
             self.publisher_.publish(arm_angles)
                     

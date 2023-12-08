@@ -23,8 +23,12 @@ class OpenLoopController(Node):
 
     def velocity_callback(self):
         wheel_velocities = Float64MultiArray() 
-        if(self.i<5.0):
-            linear_vel = 10.0
+        if(self.i<10.0):
+            linear_vel = 3.0
+        elif(self.i> 10.0 and self.i <40.0 ):
+            linear_vel = 0.0
+        elif(self.i> 40.0 and self.i <50.0 ):
+            linear_vel = 3.0
         else:
              self.get_logger().info('stoping car at: "%s"' % self.i)
              linear_vel = 0.0

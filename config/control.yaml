@@ -27,6 +27,7 @@ position_controller:
             - 45j
             - 56j
             - 67j
+            - 7-gripper_joint
         interface_name: position
         command_interfaces:
             - position
