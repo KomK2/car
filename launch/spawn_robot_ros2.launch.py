@@ -25,7 +25,7 @@ def generate_launch_description():
     # [X, Y, Z]
     position = [0.0, 0.0, 0.5]
     # [Roll, Pitch, Yaw]
-    orientation = [0.0, 0.0, 3.14]
+    orientation = [0.0, 0.0, 1.57]
     # Base Name or robot
     robot_base_name = "car"
     ####### DATA INPUT END ##########

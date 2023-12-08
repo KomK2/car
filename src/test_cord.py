@@ -31,21 +31,21 @@ class OpenLoopController(Node):
         self.DH_params = []
 
         # test
-        self.DH_params.append([128, self.q1, 0, -spi/2])
-        self.DH_params.append([0, self.q2+(spi/2),-612.7, 2*spi])
-        self.DH_params.append([0, self.q3, -571.6, -spi*2])
-        self.DH_params.append([163.9, self.q4 - (spi/2), 0, spi/2])
-        self.DH_params.append([115.7, self.q5, 0, -spi/2])
-        self.DH_params.append([192.2, self.q6, 0, 0])
-        self.DH_params.append([0, 0, 0, 0])
-
         # self.DH_params.append([128, self.q1, 0, -spi/2])
-        # self.DH_params.append([0, self.q2 -(spi/2),612.7, 2*spi])
-        # self.DH_params.append([0, self.q3, 571.6, -spi*2])
-        # self.DH_params.append([163.9, self.q4 +(spi/2), 0, spi/2])
+        # self.DH_params.append([0, self.q2+(spi/2),-612.7, 2*spi])
+        # self.DH_params.append([0, self.q3, -571.6, spi*2])
+        # self.DH_params.append([163.9, self.q4 - (spi/2), 0, spi/2])
         # self.DH_params.append([115.7, self.q5, 0, -spi/2])
         # self.DH_params.append([192.2, self.q6, 0, 0])
         # self.DH_params.append([0, 0, 0, 0])
+
+        self.DH_params.append([128, self.q1, 0, -spi/2])
+        self.DH_params.append([0, self.q2 -(spi/2),612.7, 2*spi])
+        self.DH_params.append([0, self.q3, 571.6, -spi*2])
+        self.DH_params.append([163.9, self.q4 +(spi/2), 0, spi/2])
+        self.DH_params.append([115.7, self.q5, 0, -spi/2])
+        self.DH_params.append([192.2, self.q6, 0, 0])
+        self.DH_params.append([0, 0, 0, 0])
 
         self.arm_angle_callback()
 
@@ -61,6 +61,7 @@ class OpenLoopController(Node):
 
         return mat
     
+    # list of transformations
     def joint_transforms(self, DH_params):
         transforms = []
 
@@ -72,10 +73,13 @@ class OpenLoopController(Node):
 
         return transforms
     
+
+    # jacobian matrix to calculate 
     def jacobian_expr(self, DH_params):
 
         transforms = self.joint_transforms(DH_params)
 
+        # base transformation
         trans_EF = transforms[0]
 
         for mat in transforms[1:]:
@@ -276,12 +280,12 @@ class OpenLoopController(Node):
     # set joint_lims to false if you want to allow the robot to ignore joint limits
     # This is currently super slow since it's using all symbolic math
     
-    def i_kine(self, joints_init, target, DH_params, error_trace=False, no_rotation=False, joint_lims=True):
+    def i_kine(self, joints_init, target, DH_params, error_trace=True, no_rotation=False, joint_lims=False):
         
         joints = joints_init
         
-        xr_desired = target[0:3,0:3]
-        xt_desired = target[0:3,3]
+        xr_desired = target[0:3,0:3] #target postion
+        xt_desired = target[0:3,3]    #target orientation
         
         x_dot_prev = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
             
@@ -304,16 +308,16 @@ class OpenLoopController(Node):
             
             jac = np.array(jac).astype(np.float64)
             
-            trans_EF_cur = self.trans_EF_eval(joints, DH_params)
+            trans_EF_cur = self.trans_EF_eval(joints, DH_params) 
 
             print(joints)
             # ------------------------------------------------------------
             
 
-            # arm_angles = Float64MultiArray() 
-            # arm_angles.data = [0.0,0.0,joints[0],joints[1],joints[2],joints[3],joints[4],joints[5],0.0]
-            #     # self.get_logger().info('publishing postions: "%s"' % self.i)
-            # self.publisher_.publish(arm_angles)
+            arm_angles = Float64MultiArray() 
+            arm_angles.data = [0.0,0.0,joints[0][0],joints[1][0],joints[2][0],joints[3][0],joints[4][0],0.0,0.0]
+                # self.get_logger().info('publishing postions: "%s"' % self.i)
+            self.publisher_.publish(arm_angles)
                     
             trans_EF_cur = np.array(trans_EF_cur).astype(np.float64)
             
@@ -391,42 +395,35 @@ class OpenLoopController(Node):
         
         
         print("Final position is:")
+        print("test1")
         print(final_xt)
             
         return (joints, e_trace) if error_trace else joints
     
-    def transformationMatrix(a , alpha, d, t) :
-        t = sp.rad(t)
-        alpha = sp.rad(alpha)
-        return sp.Matrix([
-        [cos(t),( -sin(t)*cos(alpha)), (sin(t)*sin(alpha)), (a*cos(t))],
-        [sin(t),( cos(t)*cos(alpha)), -(cos(t)*sin(alpha)), (a*sin(t))],
-        [0, sin(alpha), cos(alpha), d],
-        [0,0,0,1]
-        ])
+
     
     def arm_angle_callback(self):
-        # joints = np.array([[0.0],[-pi/2],[0.0],[pi/2],[0.0],[0.0]])
+        joints = np.array([[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]])
 
-        # target = np.array([[1, 0, 0, 0],
-        #                 [0, 1, 0, 356],
-        #                 [0, 0, 1, 800],
-        #                 [0, 0, 0, 1]])
+        target = np.array([[1, 0, 0, 1300.0],
+                        [0, 1, 0, 356.0],
+                        [0, 0, 1, 128.0],
+                        [0, 0, 0, 1]])
 
-        # new_j, e_trace = self.i_kine(joints, target, self.DH_params, error_trace=True)
-        # print(f"joint values {new_j}")
+        new_j, e_trace = self.i_kine(joints, target, self.DH_params, error_trace=True)
+        print(f"joint values {new_j}")
 
-        # self.plot_pose(new_j, self.DH_params)
+        self.plot_pose(new_j, self.DH_params)
 
-        # plt.figure(figsize=(8,8))
-        # plt.plot(e_trace)
-        # plt.title('Error Trace')
+        plt.figure(figsize=(8,8))
+        plt.plot(e_trace)
+        plt.title('Error Trace')
             
-        arm_angles = Float64MultiArray() 
-        arm_angles.data = [0.0,0.0,-1.14842671 , -1.56309001 , 1.50796447 , 2.05305876, 1.66499763, -0.41012713,0.0]
-        # arm_angles.data = [0.0,0.0,1.57 , 0.0 ,0.0 ,0.0, 0.0,0.0,0.0]
-            # self.get_logger().info('publishing postions: "%s"' % self.i)
-        self.publisher_.publish(arm_angles)
+        # arm_angles = Float64MultiArray() 
+        # arm_angles.data = [0.0,0.0,-2.0943951 , -1.60491838 , 1.10762422 , 1.94664517, 1.18110623, 0.53379638,0.0]
+        # # arm_angles.data = [0.0,0.0,1.57 , 0.0 ,0.0 ,0.0, 0.0,0.0,0.0]
+        #     # self.get_logger().info('publishing postions: "%s"' % self.i)
+        # self.publisher_.publish(arm_angles)
             
 
 def main(args=None):

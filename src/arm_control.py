@@ -34,55 +34,47 @@ class OpenLoopController(Node):
             [0,0,0,1]
         ])
     
-    def jacobian(self, th1,th2, th3, th4, th5, th6 ):
+    def jacobian(self,theta_1,theta_2, theta_3, theta_4, theta_5, theta_6 ):
 
-        T0 = self.transformationMatrix(0, rad(0),         0, rad(0))
-        T1 = self.transformationMatrix(0, rad(-90),     128, th1)
-        T2 = self.transformationMatrix(612.7, rad(180),   0, th2-rad(90))
-        T3 = self.transformationMatrix(571.6, rad(-180),  0, th3)
-        T4 = self.transformationMatrix(0, rad(90),    163.9, th4 + rad(90))
-        T5 = self.transformationMatrix(0, rad(-90),   115.7, th5)
-        T6 = self.transformationMatrix(0, rad(0),     192.2, th6)
-        
-        T01 = (T1)
-        T02 = (T01*T2)
-        T03 = (T02*T3)
-        T04 = (T03*T4)
-        T05 = (T04*T5)
-        T06 = (T05*T6)
+        x0= self.transformationMatrix(0 , rad(0), 0, rad(0))
+        x1= self.transformationMatrix( 0 , rad( -90), 128, theta_1)
+        x2= self.transformationMatrix(-612.7, rad(180), 0, rad(90)+ theta_2)
+        x3 = self.transformationMatrix(-571.6, rad(180), 0,theta_3)
+        x4 = self.transformationMatrix(0, rad(90), 163.9, rad(-90)+theta_4)
+        x5 = self.transformationMatrix(0, rad(-90), 115.7, theta_5)
+        x6 = self.transformationMatrix(0, rad(0), 192.2, theta_6)
+        x = x1*x2*x3*x4*x5*x6
 
-        # To extract z vectors
-        z0 = Matrix(T0[:, 2][:3])
-        z1 = Matrix(T01[:, 2][:3])
-        z2 = Matrix(T02[:, 2][:3])
-        z3 = Matrix(T03[:, 2][:3])
-        z4 = Matrix(T04[:, 2][:3])
-        z5 = Matrix(T05[:, 2][:3])
-        z6 = Matrix(T06[:, 2][:3])
+        k = Matrix([[0], [0], [1]])
 
-        # To extract o vectors
-        o0 = Matrix(T0[:, 3][:3])
-        o1 = Matrix(T01[:, 3][:3])
-        o2 = Matrix(T02[:, 3][:3])
-        o3 = Matrix(T03[:, 3][:3])
-        o4 = Matrix(T04[:, 3][:3])
-        o5 = Matrix(T05[:, 3][:3])
-        o6 = Matrix(T06[:, 3][:3])
+        z0 = x0[:3, :3]*k
+        z1 = (x0*x1)[:3, :3]*k
+        z2 = (x0*x1*x2)[:3, :3]*k
+        z3 = (x0*x1*x2*x3)[:3, :3]*k
+        z4 = (x0*x1*x2*x3*x4)[:3, :3]*k
+        z5 = (x0*x1*x2*x3*x4*x5)[:3, :3]*k
+        z6 = (x0*x1*x2*x3*x4*x5*x6)[:3, :3]*k
 
-        # To compute jacobian matrix
-        J1 = Matrix([z0.cross(o6-o0), z0])
-        J2 = Matrix([z1.cross(o6 - o1), z1])
-        J3 = Matrix([z2.cross(o6 - o2), z2])
-        J4 = Matrix([z3.cross(o6 - o3), z3])
-        J5 = Matrix([z4.cross(o6 - o4), z4])
-        J6 = Matrix([z5.cross(o6 - o5), z5])
-        J = J1.row_join(J2).row_join(J3).row_join(J4).row_join(J5).row_join(J6)
-        
-        return J
+
+        o0 = x0[:3, -1]
+        o1 = (x0*x1)[:3, -1]
+        o2 = (x0*x1*x2)[:3, -1]
+        o3 = (x0*x1*x2*x3)[:3, -1]
+        o4 = (x0*x1*x2*x3*x4)[:3, -1]
+        o5 = (x0*x1*x2*x3*x4*x5)[:3, -1]
+        o6 = (x0*x1*x2*x3*x4*x5*x6)[:3, -1]
+
+
+        j1 =Matrix([[z0.cross(o6-o0)],[z0]])
+        j2 =Matrix([[z1.cross(o6-o1)],[z1]])
+        j3 =Matrix([[z2.cross(o6-o2)],[z2]])
+        j4 =Matrix([[z3.cross(o6-o3)],[z3]])
+        j5 =Matrix([[z4.cross(o6-o4)],[z4]])
+        j6 =Matrix([[z5.cross(o6-o5)],[z5]])
+
+        j =  Matrix.hstack(j1,j2,j3,j4,j5,j6)
+        return j
  
-
-
-
     def arm_angle_callback(self):
         x_coordinate = []
         y_coordinate = []
@@ -93,10 +85,10 @@ class OpenLoopController(Node):
         x_2= 800
 
         y_1=356.12
-        y_2=800
+        y_2=500
 
         z_1=1428
-        z_2=300
+        z_2=1300
 
         x_dot = (x_1-x_2)/20
         y_dot = (y_1-y_2)/20
@@ -107,7 +99,7 @@ class OpenLoopController(Node):
         Ti = 0
         dt = 0.001
         time = 20
-        j = self.jacobian(0.01,0.01,0.01,0.01,0.01,0.01)
+        j = self.jacobian(0.001,0.001,0.001,0.001,0.001,0.001)
         j_float = np.matrix(j).astype(np.float64)
         j_inv = np.linalg.pinv(j_float)
 
@@ -142,19 +134,16 @@ class OpenLoopController(Node):
                 j_float = temp_float
             
 
-            # j = self.jacobian(q1,q2,q3,q4,q5,q6)
-
             j_float = np.matrix(j).astype(np.float64)
             j_inv = np.linalg.inv(temp_float)
             
-            to0 = self.transformationMatrix(0 , rad(0), 0, rad(0))
-
-            t1 = self.transformationMatrix(0 ,  rad( -90), 128, q1)
-            t2 = self.transformationMatrix(612.7,rad( 180), 0,rad(-90)+ q2 )
-            t3 = self.transformationMatrix(571.6, rad(-180), 0,q3)
-            t4 = self.transformationMatrix(0,rad(90),  163.9,rad(90)+q4)
-            t5 = self.transformationMatrix(0,rad(-90),115.7,q5)
-            t6 = self.transformationMatrix(0, rad(0),192.2,q6)
+            to0= self.transformationMatrix(0 , rad(0), 0, rad(0))
+            t1= self.transformationMatrix(0 ,  rad( -90), 128, q1)
+            t2= self.transformationMatrix(-612.7, rad(180), 0, rad(90)+ q2 )
+            t3 = self.transformationMatrix(-571.6, rad(180), 0, q3)
+            t4 = self.transformationMatrix(0,rad(90), 163.9, rad(-90)+q4)
+            t5 = self.transformationMatrix(0,rad(-90),115.7, q5)
+            t6 = self.transformationMatrix(0, rad(0), 192.2, q5)
 
             t = to0*t1*t2*t3*t4*t5*t6
 
