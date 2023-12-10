@@ -18,8 +18,6 @@ class OpenLoopController(Node):
         super().__init__('open_loop_controller')
         self.publisher_ = self.create_publisher(Float64MultiArray, '/position_controller/commands', 10)
         
-        
-        self.DOF = 6
 
         self.q1, self.q2, self.q3, self.q4, self.q5, self.q6 = sp.symbols('q1 q2 q3 q4 q5 q6')
 
@@ -78,9 +76,9 @@ class OpenLoopController(Node):
 
         end_effector_position = final_transformation[0:3,3]
 
-        j = sp.zeros(6, self.DOF)
+        j = sp.zeros(6, 6)
 
-        for joint in range(self.DOF):
+        for joint in range(6):
 
             trans_joint = transforms[0]
 
@@ -198,7 +196,7 @@ class OpenLoopController(Node):
                                         [R[1,0]-R[0,1]]])
             
             
-            rotation_dot = 200 * r * sin(v)
+            rotation_dot = 250 * r * sin(v)
             
             xt_dot = xt_dot.reshape((3,1))
                     
@@ -224,7 +222,7 @@ class OpenLoopController(Node):
             lam = 13
             alpha = 1
                             
-            joint_change = alpha * np.linalg.inv(jac.T@jac + lam**2*np.eye(self.DOF)) @ jac.T @ x_dot
+            joint_change = alpha * np.linalg.inv(jac.T@jac + lam**2*np.eye(6)) @ jac.T @ x_dot
             
             joints += joint_change
             
