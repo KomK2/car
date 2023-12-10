@@ -23,35 +23,25 @@ class OpenLoopController(Node):
 
         self.q1, self.q2, self.q3, self.q4, self.q5, self.q6 = sp.symbols('q1 q2 q3 q4 q5 q6')
 
-        # Value of pi from the symbolic library for convenience
+        # Value of pi from the sympy
         spi = sp.pi
 
-        # Define DH table
+        
+        #DH table
+        self.dh_parameters = []
 
-        self.DH_params = []
-
-        # test
-        # self.DH_params.append([128, self.q1, 0, -spi/2])
-        # self.DH_params.append([0, self.q2+(spi/2),-612.7, 2*spi])
-        # self.DH_params.append([0, self.q3, -571.6, spi*2])
-        # self.DH_params.append([163.9, self.q4 - (spi/2), 0, spi/2])
-        # self.DH_params.append([115.7, self.q5, 0, -spi/2])
-        # self.DH_params.append([192.2, self.q6, 0, 0])
-        # self.DH_params.append([0, 0, 0, 0])
-
-        self.DH_params.append([128, self.q1, 0, -spi/2])
-        self.DH_params.append([0, self.q2 -(spi/2),612.7, 2*spi])
-        self.DH_params.append([0, self.q3, 571.6, -spi*2])
-        self.DH_params.append([163.9, self.q4 +(spi/2), 0, spi/2])
-        self.DH_params.append([115.7, self.q5, 0, -spi/2])
-        self.DH_params.append([192.2, self.q6, 0, 0])
-        self.DH_params.append([0, 0, 0, 0])
+        self.dh_parameters.append([128, self.q1, 0, -spi/2])
+        self.dh_parameters.append([0, self.q2 -(spi/2),612.7, 2*spi])
+        self.dh_parameters.append([0, self.q3, 571.6, -spi*2])
+        self.dh_parameters.append([163.9, self.q4 +(spi/2), 0, spi/2])
+        self.dh_parameters.append([115.7, self.q5, 0, -spi/2])
+        self.dh_parameters.append([192.2, self.q6, 0, 0])
+        self.dh_parameters.append([0, 0, 0, 0])
 
         self.arm_angle_callback()
 
 
-    def DH_trans_matrix(self, params):
-
+    def transformation_matrix(self, params):
         d, theta, a, alpha = (params[0], params[1], params[2], params[3])
 
         mat = sp.Matrix([[sp.cos(theta), -1*sp.sin(theta)*sp.cos(alpha), sp.sin(theta)*sp.sin(alpha),    a*sp.cos(theta)],
@@ -61,34 +51,35 @@ class OpenLoopController(Node):
 
         return mat
     
+
     # list of transformations
-    def joint_transforms(self, DH_params):
+    def joint_transforms(self, dh_parameters):
         transforms = []
 
-        transforms.append(sp.eye(4)) #Assuming the first first joint is at the origin
+        transforms.append(sp.eye(4)) #At origin
 
-        for el in DH_params:
+        for l in dh_parameters:
 
-            transforms.append(self.DH_trans_matrix(el))
+            transforms.append(self.transformation_matrix(l))
 
         return transforms
     
 
     # jacobian matrix to calculate 
-    def jacobian_expr(self, DH_params):
+    def jacobian_expr(self, dh_parameters):
 
-        transforms = self.joint_transforms(DH_params)
+        transforms = self.joint_transforms(dh_parameters)
 
         # base transformation
-        trans_EF = transforms[0]
+        final_transformation = transforms[0]
 
         for mat in transforms[1:]:
 
-            trans_EF = trans_EF * mat
+            final_transformation = final_transformation * mat
 
-        pos_EF = trans_EF[0:3,3]
+        end_effector_position = final_transformation[0:3,3]
 
-        J = sp.zeros(6, self.DOF)
+        j = sp.zeros(6, self.DOF)
 
         for joint in range(self.DOF):
 
@@ -102,19 +93,18 @@ class OpenLoopController(Node):
 
             pos_joint = trans_joint[0:3,3]
 
-            Jv = z_axis.cross(pos_EF - pos_joint)
+            jv = z_axis.cross(end_effector_position - pos_joint)
 
-            Jw = z_axis
+            jw = z_axis
 
-            J[0:3,joint] = Jv
-            J[3:6,joint] = Jw
+            j[0:3,joint] = jv
+            j[3:6,joint] = jw
 
-        J = sp.simplify(J)
-        return J
+        j = sp.simplify(j)
+        return j
     
 
     def jacobian_subs(self, joints, jacobian_sym):
-
         # Convert to list if it's an ndarray
         if (isinstance(joints, np.ndarray)):
             joints = joints.flatten().tolist()
@@ -130,13 +120,13 @@ class OpenLoopController(Node):
 
         return J_l
     
-    def trans_EF_eval(self, joints, DH_params):
+    def trans_EF_eval(self, joints, dh_parameters):
 
     # Convert to list if it's an ndarray
         if (isinstance(joints, np.ndarray)):
             joints = joints.flatten().tolist()
 
-        transforms = self.joint_transforms(DH_params)
+        transforms = self.joint_transforms(dh_parameters)
 
         trans_EF = transforms[0]
 
@@ -155,15 +145,15 @@ class OpenLoopController(Node):
 
         return trans_EF_cur
     
-    def plot_pose(self, joints, DH_params):
+    def plot_pose(self, joints, dh_parameters):
 
     # Convert to list if it's an ndarray
         if (isinstance(joints, np.ndarray)):
             joints = joints.flatten().tolist()
 
-        transforms = self.joint_transforms(DH_params)
+        transforms = self.joint_transforms(dh_parameters)
 
-        trans_EF = self.trans_EF_eval(joints, DH_params)
+        trans_EF = self.trans_EF_eval(joints, dh_parameters)
 
         pos_EF = trans_EF[0:3,3]
 
@@ -280,7 +270,7 @@ class OpenLoopController(Node):
     # set joint_lims to false if you want to allow the robot to ignore joint limits
     # This is currently super slow since it's using all symbolic math
     
-    def i_kine(self, joints_init, target, DH_params, error_trace=True, no_rotation=False, joint_lims=False):
+    def i_kine(self, joints_init, target, dh_parameters, error_trace=True, no_rotation=False, joint_lims=False):
         
         joints = joints_init
         
@@ -296,7 +286,7 @@ class OpenLoopController(Node):
         print("Calculating jacobian")
         
         # We only do this once since it's computationally heavy
-        jacobian_symbolic = self.jacobian_expr(DH_params)
+        jacobian_symbolic = self.jacobian_expr(dh_parameters)
         
         print("Starting IK loop")
         
@@ -308,7 +298,7 @@ class OpenLoopController(Node):
             
             jac = np.array(jac).astype(np.float64)
             
-            trans_EF_cur = self.trans_EF_eval(joints, DH_params) 
+            trans_EF_cur = self.trans_EF_eval(joints, dh_parameters) 
 
             print(joints)
             # ------------------------------------------------------------
@@ -410,21 +400,14 @@ class OpenLoopController(Node):
                         [0, 0, 1, 128.0],
                         [0, 0, 0, 1]])
 
-        new_j, e_trace = self.i_kine(joints, target, self.DH_params, error_trace=True)
+        new_j, e_trace = self.i_kine(joints, target, self.dh_parameters, error_trace=True)
         print(f"joint values {new_j}")
 
-        self.plot_pose(new_j, self.DH_params)
+        self.plot_pose(new_j, self.dh_parameters)
 
         plt.figure(figsize=(8,8))
         plt.plot(e_trace)
         plt.title('Error Trace')
-            
-        # arm_angles = Float64MultiArray() 
-        # arm_angles.data = [0.0,0.0,-2.0943951 , -1.60491838 , 1.10762422 , 1.94664517, 1.18110623, 0.53379638,0.0]
-        # # arm_angles.data = [0.0,0.0,1.57 , 0.0 ,0.0 ,0.0, 0.0,0.0,0.0]
-        #     # self.get_logger().info('publishing postions: "%s"' % self.i)
-        # self.publisher_.publish(arm_angles)
-            
 
 def main(args=None):
     rclpy.init(args=args)

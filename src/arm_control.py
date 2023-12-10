@@ -162,7 +162,7 @@ class OpenLoopController(Node):
             Ti = Ti + dt
 
             wheel_velocities = Float64MultiArray() 
-            wheel_velocities.data = [0.0,0.0,q1,q2,q3,q4,q5,q6,0.0]
+            wheel_velocities.data = [0.0,0.0,q1,q2,q3,0.0,q4,q5,q6,0.0,0.0]
             # self.get_logger().info('publishing postions: "%s"' % self.i)
             self.publisher_.publish(wheel_velocities)
             
