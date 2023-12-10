@@ -23,7 +23,6 @@ class OpenLoopController(Node):
 
         self.q1, self.q2, self.q3, self.q4, self.q5, self.q6 = sp.symbols('q1 q2 q3 q4 q5 q6')
 
-        # Value of pi from the sympy
         spi = sp.pi
 
         
@@ -104,291 +103,141 @@ class OpenLoopController(Node):
         return j
     
 
-    def jacobian_subs(self, joints, jacobian_sym):
-        # Convert to list if it's an ndarray
+    def jacobian_calculation(self, joints, jacobian_equation):
+        
         if (isinstance(joints, np.ndarray)):
             joints = joints.flatten().tolist()
 
-        J_l = jacobian_sym
+        jac = jacobian_equation
 
-        J_l = J_l.subs(self.q1, joints[0])
-        J_l = J_l.subs(self.q2, joints[1])
-        J_l = J_l.subs(self.q3, joints[2])
-        J_l = J_l.subs(self.q4, joints[3])
-        J_l = J_l.subs(self.q5, joints[4])
-        J_l = J_l.subs(self.q6, joints[5])
+        jac = jac.subs(self.q1, joints[0])
+        jac = jac.subs(self.q2, joints[1])
+        jac = jac.subs(self.q3, joints[2])
+        jac = jac.subs(self.q4, joints[3])
+        jac = jac.subs(self.q5, joints[4])
+        jac = jac.subs(self.q6, joints[5])
 
-        return J_l
+        return jac
     
-    def trans_EF_eval(self, joints, dh_parameters):
 
-    # Convert to list if it's an ndarray
+
+    def transformation_end_effector(self, joints, dh_parameters):
         if (isinstance(joints, np.ndarray)):
             joints = joints.flatten().tolist()
 
+        # gives list of  all transformations
         transforms = self.joint_transforms(dh_parameters)
 
-        trans_EF = transforms[0]
+        #Intializing variable with identity matrix
+        transformation_of_end_effector = transforms[0]
 
         for mat in transforms[1:]:
 
-            trans_EF = trans_EF * mat
+            transformation_of_end_effector = transformation_of_end_effector * mat
 
-        trans_EF_cur = trans_EF
+        sub_transform = transformation_of_end_effector
 
-        trans_EF_cur = trans_EF_cur.subs(self.q1, joints[0])
-        trans_EF_cur = trans_EF_cur.subs(self.q2, joints[1])
-        trans_EF_cur = trans_EF_cur.subs(self.q3, joints[2])
-        trans_EF_cur = trans_EF_cur.subs(self.q4, joints[3])
-        trans_EF_cur = trans_EF_cur.subs(self.q5, joints[4])
-        trans_EF_cur = trans_EF_cur.subs(self.q6, joints[5])
+        sub_transform = sub_transform.subs(self.q1, joints[0])
+        sub_transform = sub_transform.subs(self.q2, joints[1])
+        sub_transform = sub_transform.subs(self.q3, joints[2])
+        sub_transform = sub_transform.subs(self.q4, joints[3])
+        sub_transform = sub_transform.subs(self.q5, joints[4])
+        sub_transform = sub_transform.subs(self.q6, joints[5])
 
-        return trans_EF_cur
+        return sub_transform
+
     
-    def plot_pose(self, joints, dh_parameters):
-
-    # Convert to list if it's an ndarray
-        if (isinstance(joints, np.ndarray)):
-            joints = joints.flatten().tolist()
-
-        transforms = self.joint_transforms(dh_parameters)
-
-        trans_EF = self.trans_EF_eval(joints, dh_parameters)
-
-        pos_EF = trans_EF[0:3,3]
-
-        xs = []
-        ys = []
-        zs = []
-
-        J = sp.zeros(6, self.DOF)
-
-        for joint in range(self.DOF):
-
-            trans_joint = transforms[0]
-
-            for mat in transforms[1:joint+1]:
-
-                trans_joint = trans_joint*mat
-
-            pos_joint = trans_joint[0:3,3]
-
-            pos_joint = pos_joint.subs(self.q1, joints[0])
-            pos_joint = pos_joint.subs(self.q2, joints[1])
-            pos_joint = pos_joint.subs(self.q3, joints[2])
-            pos_joint = pos_joint.subs(self.q4, joints[3])
-            pos_joint = pos_joint.subs(self.q5, joints[4])
-            pos_joint = pos_joint.subs(self.q6, joints[5])
-
-
-
-            xs.append(pos_joint[0])
-            ys.append(pos_joint[1])
-            zs.append(pos_joint[2])
-
-        xs.append(pos_EF[0])
-        ys.append(pos_EF[1])
-        zs.append(pos_EF[2])
-
-        fig = plt.figure(figsize=(8,8))
-        ax = fig.add_subplot(111, projection='3d')
-
-        ax.set_xlim3d(-60,60)
-        ax.set_ylim3d(-60,60)
-        ax.set_zlim3d(0, 120)
-
-        ax.set_xlabel('X axis')
-        ax.set_ylabel('Y axis')
-        ax.set_zlabel('Z axis')
-
-        ax.plot(xs, ys, zs)
-
-    def joint_limits(self,joints):
-            
-        # Joint 1
-        if (joints[0] < -2*pi/3):
-            
-            joints[0] = -2*pi/3
-            
-        elif (joints[0] > 2*pi/3):
-            
-            joints[0] = 2*pi/3
-            
+    def ik_calculation(self, intial_joint_angles, target, dh_parameters, error_trace=True):
         
-        # Joint 2
-        if (joints[1] < -0.95*pi):
-            
-            joints[1] = -0.95*pi
-            
-        elif (joints[1] > 0):
-            
-            joints[1] = 0
-            
-        # Joint 3
-        if (joints[2] < -0.463*pi):
-            
-            joints[2] = -0.463*pi
-            
-        elif (joints[2] > 0.48*pi):
-            
-            joints[2] = 0.48*pi
-            
-        # Joint 4
-        if (joints[3] < -0.97*pi):
-            
-            joints[3] = -0.97*pi
-            
-        elif (joints[3] > 0.97*pi):
-            
-            joints[3] = 0.97*pi
-                
-
-        # Joint 5
-        if (joints[4] < -3*pi/2):
-            
-            joints[4] = -3*pi/2
-            
-        elif (joints[4] > 3*pi/2):
-            
-            joints[4] = 3*pi/2
-            
-        # Joint 6
-        if (joints[5] < -0.95*pi):
-            
-            joints[5] = -0.95*pi
-            
-        elif (joints[5] > 0.95*pi):
-            
-            joints[5] = 0.95*pi
-                
-        return joints
-    
-
-    # joints_init is the current joint values for the robot
-    # target is the desired transformation matrix at the end effector
-    # set no_rotation to true if you only care about end effector position, not rotation
-    # set joint_lims to false if you want to allow the robot to ignore joint limits
-    # This is currently super slow since it's using all symbolic math
-    
-    def i_kine(self, joints_init, target, dh_parameters, error_trace=True, no_rotation=False, joint_lims=False):
+        joints = intial_joint_angles
         
-        joints = joints_init
-        
-        xr_desired = target[0:3,0:3] #target postion
-        xt_desired = target[0:3,3]    #target orientation
+        desired_postion = target[0:3,0:3] #target postion
+        desired_orentation = target[0:3,3]    #target orientation
         
         x_dot_prev = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
             
-        e_trace = []
+        error_trace = []
         
-        iters = 0
+        itr = 0
         
-        print("Calculating jacobian")
-        
-        # We only do this once since it's computationally heavy
         jacobian_symbolic = self.jacobian_expr(dh_parameters)
         
-        print("Starting IK loop")
-        
-        final_xt = 0
+        final_orientation = 0
         
         while(1):
             
-            jac = self.jacobian_subs(joints, jacobian_symbolic)
+            jac = self.jacobian_calculation(joints, jacobian_symbolic)
             
             jac = np.array(jac).astype(np.float64)
             
-            trans_EF_cur = self.trans_EF_eval(joints, dh_parameters) 
+            trans_EF_new = self.transformation_end_effector(joints, dh_parameters) 
 
             print(joints)
-            # ------------------------------------------------------------
             
 
             arm_angles = Float64MultiArray() 
             arm_angles.data = [0.0,0.0,joints[0][0],joints[1][0],joints[2][0],0.0,joints[3][0],joints[4][0],0.0,0.0]
-                # self.get_logger().info('publishing postions: "%s"' % self.i)
             self.publisher_.publish(arm_angles)
                     
-            trans_EF_cur = np.array(trans_EF_cur).astype(np.float64)
+            trans_EF_new = np.array(trans_EF_new).astype(np.float64)
             
             
-            xr_cur = trans_EF_cur[0:3,0:3] 
-            xt_cur = trans_EF_cur[0:3,3]
+            new_postion = trans_EF_new[0:3,0:3] 
+            new_orientation = trans_EF_new[0:3,3]
             
-            final_xt = xt_cur
+            final_orientation = new_orientation
                     
-            xt_dot = xt_desired - xt_cur
+            xt_dot = desired_orentation - new_orientation
             
             
-            # Find error rotation matrix
-            R = xr_desired @ xr_cur.T
+            R = desired_postion @ new_postion.T
             
-                                
-            # convert to desired angular velocity
             v = np.arccos((R[0,0] + R[1,1] + R[2,2] - 1)/2)
             r = (0.5 * sin(v)) * np.array([[R[2,1]-R[1,2]],
                                         [R[0,2]-R[2,0]],
                                         [R[1,0]-R[0,1]]])
             
             
-            # The large constant just tells us how much to prioritize rotation
-            xr_dot = 200 * r * sin(v)
-            
-            # use this if you only care about end effector position and not rotation
-            if (no_rotation):
-                
-                xr_dot = 0 * r
+            rotation_dot = 200 * r * sin(v)
             
             xt_dot = xt_dot.reshape((3,1))
                     
-            x_dot = np.vstack((xt_dot, xr_dot))
+            x_dot = np.vstack((xt_dot, rotation_dot))
                     
-            x_dot_norm = np.linalg.norm(x_dot)
+            err = np.linalg.norm(x_dot)
             
-            #print(x_dot_norm)
                     
-            if (x_dot_norm > 25):
+            if (err > 25):
                 
-                x_dot /= (x_dot_norm/25)
+                x_dot /= (err/25)
                 
             x_dot_change = np.linalg.norm(x_dot - x_dot_prev)
-                        
-            # This loop now exits if the change in the desired movement stops changing
-            # This is useful for moving close to unreachable points
+
             if (x_dot_change < 0.005):
                 
                 break
                 
             x_dot_prev = x_dot
                 
-            e_trace.append(x_dot_norm)
+            error_trace.append(err)
                 
-            Lambda = 12
-            Alpha = 1
+            lam = 13
+            alpha = 1
                             
-            joint_change = Alpha * np.linalg.inv(jac.T@jac + Lambda**2*np.eye(self.DOF)) @ jac.T @ x_dot
+            joint_change = alpha * np.linalg.inv(jac.T@jac + lam**2*np.eye(self.DOF)) @ jac.T @ x_dot
             
             joints += joint_change
             
-            if (joint_lims): joints = self.joint_limits(joints)
 
             print(joints)
-
-            # arm_angles = Float64MultiArray() 
-            # arm_angles.data = [0.0,0.0,joints[0],joints[1],joints[2],joints[3],joints[4],joints[5],0.0]
-            #     # self.get_logger().info('publishing postions: "%s"' % self.i)
-            # self.publisher_.publish(arm_angles)
             
-            iters += 1
-                    
-        print("Done in {} iterations".format(iters))
+            itr += 1
         
         
         print("Final position is:")
-        print("test1")
-        print(final_xt)
+        print(final_orientation)
             
-        return (joints, e_trace) if error_trace else joints
+        return (joints, error_trace) if error_trace else joints
     
 
     
@@ -400,14 +249,9 @@ class OpenLoopController(Node):
                         [0, 0, 1, 128.0],
                         [0, 0, 0, 1]])
 
-        new_j, e_trace = self.i_kine(joints, target, self.dh_parameters, error_trace=True)
+        new_j, error_trace = self.ik_calculation(joints, target, self.dh_parameters, error_trace=True)
         print(f"joint values {new_j}")
 
-        self.plot_pose(new_j, self.dh_parameters)
-
-        plt.figure(figsize=(8,8))
-        plt.plot(e_trace)
-        plt.title('Error Trace')
 
 def main(args=None):
     rclpy.init(args=args)
