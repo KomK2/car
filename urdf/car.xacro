@@ -2,22 +2,31 @@
 <!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot
-  name="car" xmlns:xacro="http://ros.org/wiki/xacro">
+     <robot
+     name="car" xmlns:xacro="http://ros.org/wiki/xacro">
+   
+   
+   <link name="dummy_link"></link>
+   
+   <joint name="dummy_joint" type="fixed">
+       <origin rpy="0 0 0" xyz="0 0 0" />
+       <parent link="dummy_link"/>
+       <child link="car_base"/>
+   </joint>
   <link
     name="car_base">
     <inertial>
       <origin
-        xyz="8.17360748943693E-06 0.0225033135182252 0.309234562686189"
+        xyz="8.17360748944015E-06 0.0225033135182252 0.309234562686189"
         rpy="0 0 0" />
       <mass
         value="467.35674418477" />
       <inertia
         ixx="64.8069935901443"
         ixy="0.00212233959160385"
-        ixz="0.000377899491888436"
+        ixz="0.000377899491888313"
         iyy="42.2474032259228"
-        iyz="-1.35082963675343"
+        iyz="-1.35082963675344"
         izz="71.07249676203" />
     </inertial>
     <visual>
@@ -535,7 +544,7 @@
   </link>
   <joint
     name="lidar_joint"
-    type="fixed">
+    type="continuous">
     <origin
       xyz="0 0.1524 0.655447"
       rpy="0 0 0" />
@@ -544,22 +553,22 @@
     <child
       link="lidar_link" />
     <axis
-      xyz="0 0 0" />
+      xyz="0 0 1" />
   </joint>
   <link
     name="ur10">
     <inertial>
       <origin
-        xyz="7.22391839389283E-06 -0.000475137384490065 0.000654978643972126"
+        xyz="7.22391839388589E-06 -0.000475137384490121 0.000654978643972126"
         rpy="0 0 0" />
       <mass
         value="1.91435201606526" />
       <inertia
         ixx="0.00312084570629235"
-        ixy="1.03835097415574E-07"
-        ixz="2.20016415043755E-07"
+        ixy="1.03835097415627E-07"
+        ixz="2.20016415043753E-07"
         iyy="0.00309492725703448"
-        iyz="5.55031448922638E-07"
+        iyz="5.55031448922631E-07"
         izz="0.00574920281992534" />
     </inertial>
     <visual>
@@ -603,17 +612,17 @@
     name="01">
     <inertial>
       <origin
-        xyz="3.70762208490583E-05 0.0114409852434528 0.0116125856420283"
+        xyz="3.70761457497565E-05 0.0114409856017593 0.0116125858663346"
         rpy="0 0 0" />
       <mass
-        value="8.30725875791485" />
+        value="8.30725872178856" />
       <inertia
-        ixx="0.029020927491474"
-        ixy="7.55948089001624E-06"
-        ixz="-8.23045819536526E-06"
-        iyy="0.027224956518295"
-        iyz="0.00281819311295836"
-        izz="0.0270973700422314" />
+        ixx="0.0290209274545541"
+        ixy="7.55947991125206E-06"
+        ixz="-8.23047846730788E-06"
+        iyy="0.0272249564707654"
+        iyz="0.00281819311419462"
+        izz="0.0270973700316767" />
     </inertial>
     <visual>
       <origin
@@ -656,17 +665,17 @@
     name="12">
     <inertial>
       <origin
-        xyz="-2.43404147082064E-05 -0.250894715013332 -0.00563651299321782"
+        xyz="-2.43403882967536E-05 -0.250894715459623 -0.00563651311083996"
         rpy="0 0 0" />
       <mass
-        value="23.5085888532833" />
+        value="23.5085888172064" />
       <inertia
-        ixx="0.256767671623099"
-        ixy="3.62399517884548E-06"
-        ixz="-9.72858775406835E-07"
-        iyy="0.0505710283974333"
-        iyz="0.00203684454830707"
-        izz="0.255664797838807" />
+        ixx="0.256767671586333"
+        ixy="3.62397486865205E-06"
+        ixz="-9.72859790180711E-07"
+        iyy="0.0505710283867853"
+        iyz="0.00203684454960158"
+        izz="0.255664797791348" />
     </inertial>
     <visual>
       <origin
@@ -709,16 +718,16 @@
     name="23">
     <inertial>
       <origin
-        xyz="0.244390991313134 -0.0139095256822837 -0.00101283060327784"
+        xyz="-0.244390991313135 0.0139095256822855 -0.00101283060327773"
         rpy="0 0 0" />
       <mass
-        value="8.43948455874415" />
+        value="8.43948455874413" />
       <inertia
-        ixx="0.00901829529744047"
-        ixy="-1.75583144369193E-06"
-        ixz="-0.00028822454084213"
+        ixx="0.00901829529744046"
+        ixy="-1.7558314428111E-06"
+        ixz="0.000288224540842122"
         iyy="0.131613662619847"
-        iyz="3.49342881189503E-07"
+        iyz="-3.49342881195927E-07"
         izz="0.131781826183782" />
     </inertial>
     <visual>
@@ -750,29 +759,29 @@
     type="continuous">
     <origin
       xyz="-0.014341662691355 -0.616041711362748 -0.127892362765015"
-      rpy="-3.14159265358979 0 -1.57079632679489" />
+      rpy="3.14159265358979 0 1.57079632679489" />
     <parent
       link="12" />
     <child
       link="23" />
     <axis
-      xyz="0 0.00340256352288005 0.999994211263982" />
+      xyz="0 -0.00340256352288005 0.999994211263982" />
   </joint>
   <link
     name="34">
     <inertial>
       <origin
-        xyz="-0.00758686877396642 -0.000158257963224488 0.00819784914576557"
+        xyz="0.00758686877396486 0.000158257963222184 0.0081978491457739"
         rpy="0 0 0" />
       <mass
-        value="0.728996428250046" />
+        value="0.728996428249931" />
       <inertia
-        ixx="0.000910114210779735"
-        ixy="-4.95497562223857E-07"
-        ixz="-0.00012008521723334"
-        iyy="0.000986687923606721"
-        iyz="-1.62299300727914E-07"
-        izz="0.000877255272961633" />
+        ixx="0.000910114210779709"
+        ixy="-4.95497562180507E-07"
+        ixz="0.000120085217233337"
+        iyy="0.000986687923606646"
+        iyz="1.62299300726255E-07"
+        izz="0.000877255272961533" />
     </inertial>
     <visual>
       <origin
@@ -802,30 +811,30 @@
     name="34j"
     type="continuous">
     <origin
-      xyz="0.568458717066326 -0.0140771361182816 -0.00154359819575967"
+      xyz="-0.568458717066326 0.0140771361182856 -0.00154359819575967"
       rpy="3.14159265358979 0 0" />
     <parent
       link="23" />
     <child
       link="34" />
     <axis
-      xyz="-1 0 0" />
+      xyz="1 0 0" />
   </joint>
   <link
     name="45">
     <inertial>
       <origin
-        xyz="-6.86078064258272E-06 -0.00758686562123934 0.0107376301790447"
+        xyz="-6.86078063953655E-06 -0.00758686562124228 0.0107376301790323"
         rpy="0 0 0" />
       <mass
-        value="0.728996237064777" />
+        value="0.728996237064935" />
       <inertia
-        ixx="0.000986687619429261"
-        ixy="-1.03152618194114E-09"
-        ixz="-4.17354729205834E-07"
-        iyy="0.000910112478523473"
-        iyz="-0.000120085251276709"
-        izz="0.000877253255884629" />
+        ixx="0.000986687619429367"
+        ixy="-1.03152612309003E-09"
+        ixz="-4.1735472920365E-07"
+        iyy="0.000910112478523505"
+        iyz="-0.000120085251276714"
+        izz="0.000877253255884768" />
     </inertial>
     <visual>
       <origin
@@ -855,8 +864,8 @@
     name="45j"
     type="continuous">
     <origin
-      xyz="-0.00107999999999775 0.000121644413048502 0.114239846500137"
-      rpy="1.5707963267949 0 1.57079632679489" />
+      xyz="0.00107999999999753 -0.000121644413048495 0.114239846500137"
+      rpy="1.5707963267949 0 -1.57079632679489" />
     <parent
       link="34" />
     <child
@@ -868,17 +877,17 @@
     name="56">
     <inertial>
       <origin
-        xyz="-0.000158258378740259 0.00758689090859144 0.010737837609898"
+        xyz="-0.000158258378738691 0.00758689090859055 0.0107378376099037"
         rpy="0 0 0" />
       <mass
-        value="0.728997478631908" />
+        value="0.728997478631833" />
       <inertia
-        ixx="0.00098668725075459"
-        ixy="4.95491590353946E-07"
-        ixz="-1.62291043906277E-07"
-        iyy="0.000910112496687827"
-        iyz="0.000120084923500319"
-        izz="0.000877253430656249" />
+        ixx="0.00098668725075454"
+        ixy="4.9549159032517E-07"
+        ixz="-1.62291043904241E-07"
+        iyy="0.00091011249668781"
+        iyz="0.000120084923500316"
+        izz="0.000877253430656182" />
     </inertial>
     <visual>
       <origin
@@ -921,7 +930,7 @@
     name="67">
     <inertial>
       <origin
-        xyz="-5.11211491377381E-05 -0.000470150585815121 -0.00309378276926547"
+        xyz="-5.11211491377346E-05 -0.000470150585814899 -0.00309378276926547"
         rpy="0 0 0" />
       <mass
         value="0.430679886408465" />
@@ -970,4 +979,365 @@
     <axis
       xyz="-0.00252374300930457 0 -0.99999681535554" />
   </joint>
+  <link
+    name="gripper">
+    <inertial>
+      <origin
+        xyz="-0.00710247160346203 0.0303390950483818 0.000488474590246035"
+        rpy="0 0 0" />
+      <mass
+        value="1.34963431952749" />
+      <inertia
+        ixx="0.00651208089817064"
+        ixy="0.000182430404454018"
+        ixz="-0.00012186571378861"
+        iyy="0.00861283977900375"
+        iyz="-1.31090652690102E-05"
+        izz="0.0049440363866004" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://car/meshes/gripper.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://car/meshes/gripper.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="7-gripper_joint"
+    type="continuous">
+    <origin
+      xyz="-0.000514480216416438 0.000109109397764318 0.0968676227049757"
+      rpy="-1.5707963267949 0 3.14159265358979" />
+    <parent
+      link="67" />
+    <child
+      link="gripper" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+    
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    # Velocity Controllers for 2 back wheels
+
+      
+    <joint name="front_left_wheel_joint">
+      <command_interface name="velocity">
+          <param name="min">-1000.0</param>
+          <param name="max">1000.0</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="front_right_wheel_joint">
+    <command_interface name="velocity">
+        <param name="min">-1000.0</param>
+        <param name="max">1000.0</param>
+    </command_interface>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+    <joint name="back_left_wheel_joint">
+        <command_interface name="velocity">
+            <param name="min">-1000.0</param>
+            <param name="max">1000.0</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="back_right_wheel_link_joint">
+      <command_interface name="velocity">
+          <param name="min">-1000.0</param>
+          <param name="max">1000.0</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+  </joint>
+
+  <!-- Velocity controllers for ur10 -->
+  <joint name="01j">
+    <command_interface name="velocity">
+        <param name="min">-1000.0</param>
+        <param name="max">1000.0</param>
+    </command_interface>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+</joint>
+
+<joint name="12j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="23j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="34j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="45j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="56j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="67j">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="7-gripper_joint">
+  <command_interface name="velocity">
+      <param name="min">-1000.0</param>
+      <param name="max">1000.0</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+    
+   
+   # Position Controller for 2 front wheels
+    <joint name="front_right_link_joint">
+        <command_interface name="position">
+            <param name="min">-3.14</param>
+            <param name="max">3.14</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="front_left_link_joint">
+      <command_interface name="position">
+          <param name="min">-3.14</param>
+          <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+  </joint>
+
+  <!-- postion control for UR10 arms -->
+  <joint name="01j">
+    <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+    </command_interface>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+</joint>
+<joint name="12j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="23j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="34j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="45j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="56j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="67j">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+<joint name="7-gripper_joint">
+  <command_interface name="position">
+      <param name="min">-3.14</param>
+      <param name="max">3.14</param>
+  </command_interface>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+   
+    </ros2_control>
+    <gazebo reference="lidar_link">
+      <sensor name="lidar" type="ray">
+        <pose>0.0 0.0 0.0 0 0 0</pose>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <update_rate>5</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1.00000</resolution>
+              <min_angle>0.000000</min_angle>
+              <max_angle>6.280000</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.120000</min>
+            <max>3.5</max>
+            <resolution>0.015000</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <plugin name="scan" filename="libgazebo_ros_ray_sensor.so">
+          <ros>
+            <remapping>~/out:=scan</remapping>
+          </ros>
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frame_name>lidar_link</frame_name>
+        </plugin>
+      </sensor>
+      </gazebo>
+
+      <gazebo reference="car_base">
+        <gravity>true</gravity>
+        <sensor name="imu_sensor" type="imu">
+          <always_on>true</always_on>
+          <update_rate>100</update_rate>
+          <visualize>true</visualize>
+          <topic>__default_topic__</topic>
+          <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+            <topicName>imu</topicName>
+            <bodyName>car_base</bodyName>
+            <updateRateHZ>10.0</updateRateHZ>
+            <gaussianNoise>0.0</gaussianNoise>
+            <xyzOffset>0 0 0</xyzOffset>
+            <rpyOffset>0 0 0</rpyOffset>
+            <frameName>car_base</frameName>
+            <initialOrientationAsReference>false</initialOrientationAsReference>
+          </plugin>
+          <pose>0 0 0 0 0 0</pose>
+        </sensor>
+      </gazebo>
+
+      <gazebo>
+        <plugin filename="libodometry_plugin.so" name="odometry_plugin">
+          <!-- Name of the link for which the odometry is required -->
+          <frame>car_base</frame>
+          <!-- Any arbitray name for the world frame -->
+          <world_frame>fixed_world</world_frame>
+        </plugin>
+      </gazebo>
+
+      <gazebo>
+        <plugin name='vacuum_gripper' filename='libgazebo_ros_vacuum_gripper.so'>
+      
+          <!-- This part can be commented out if not required -->
+          <ros>
+      
+            <!-- Add a namespace -->
+      
+            <namespace>/</namespace>
+      
+            <!-- Remapping service and topic names -->
+            <remapping>switch:=custom_switch</remapping>
+            <remapping>grasping:=custom_grasping</remapping>
+          </ros>
+      
+          <!-- Link associated with gripper -->
+          <link_name>gripper</link_name>
+      
+          <!-- Max distance to attract entities -->
+          <max_distance>10.0</max_distance>
+      
+          <!-- List of entities to be not attracted by the gripper -->
+          <fixed>ground_plane</fixed>
+          <fixed>wall</fixed>
+      
+        </plugin>
+      </gazebo>
+  
+    <gazebo>
+      <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+          <parameters>$(find car)/config/control.yaml</parameters>
+      </plugin>
+  </gazebo>
+
+
+  
 </robot>
